@@ -1,13 +1,55 @@
 doctype html
 html(lang='es')
     head
-        title QR Generator
+        include templates/headerCDN
+
+
+        title #{title}
+
     body
-        h1 QR Generator
-        form(action='/generate' method='post' enctype='multipart/form-data')
-            input(type='file' name='file')
-            input(type='text' name='url')
-            button(type='submit') Generate QR Code
-        if image
-            img(src=`/images/${image}`)
-            a(href=`/images/${image}` download=`${image}`) Download QR Code
+        div
+            nav.p-3.bg-dark
+
+        div.text-center.py-3
+            h1  Panda Generator QR
+        div.container
+            .card.text-center
+                .card-body
+                    .row
+                        .col-6
+
+                                ul#pills-tab.nav.nav-pills.mb-3(role='tablist')
+                                    li.nav-item(role='presentation')
+                                        button#pills-home-tab.nav-link.active(data-bs-toggle='pill' data-bs-target='#pills-home' type='button' role='tab' aria-controls='pills-home' aria-selected='true') Crear por base URL
+                                    li.nav-item(role='presentation')
+                                        button#pills-profile-tab.nav-link(data-bs-toggle='pill' data-bs-target='#pills-profile' type='button' role='tab' aria-controls='pills-profile' aria-selected='false') Crear por base archivo
+                                #pills-tabContent.tab-content
+                                    #pills-home.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='pills-home-tab')
+                                        div.text-start
+                                            label Ingresa una URL:
+                                            input#urlInput.form-control(type="text" )
+
+                                    #pills-profile.tab-pane.fade(role='tabpanel' aria-labelledby='pills-profile-tab')
+                                        div.text-start
+                                            label Adjunta un archivo:
+                                            input#archivoInput.form-control(type="file" )
+
+
+                                div.py-3
+                                    button#btnCreate.btn.btn-success Generate QR Code
+                        .col-6
+                            div
+                                h5 QR Generado:
+                            div#QRgenerate(style="display:none;")
+                                img#qrImage
+                                a#downloadLink.btn.btn-warning
+                                    | Descargar
+
+
+
+
+
+
+    include templates/scripts
+    script(src="/public/js/common.js")
+    script(src="/public/js/index.js")

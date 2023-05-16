@@ -1,33 +1,38 @@
-const express = require('express');
-const multer = require('multer');
-const qrcode = require('qrcode');
-const fs = require('fs');
 
-const app = express();
-const upload = multer({ dest: 'uploads/' });
+const express = require ('express')
+const morgan = require('morgan')
+const path = require('path')
+const bodyParser = require('body-parser')
 
-app.set('view engine', 'pug');
-app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-    res.render('index');
-});
+const app = express()
 
-app.post('/generate', upload.single('file'), (req, res) => {
-    const { file, url } = req.body;
+//configuraciones
 
-    if (file) {
-        const data = fs.readFileSync(file.path);
-        const imgData = qrcode.toDataURL(data);
-        fs.writeFileSync(`public/images/${file.originalname}.png`, imgData);
-        res.render('qr', { image: `${file.originalname}.png` });
-    } else if (url) {
-        qrcode.toFile(`public/images/${url}.png`, url, () => {
-            res.render('qr', { image: `${url}.png` });
-        });
-    }
-});
+app.set('port',process.env.PORT || 3030 )
+app.set('appName',process.env.APP_NAME || 'Panda Generator QR')
 
-app.listen(3030, () => {
-    console.log('Server started on port 3030');
-});
+app.set('views', path.join(__dirname, 'views'))
+
+app.set('view engine', 'pug')
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: false}))
+// parse application/json
+app.use(bodyParser.json())
+
+app.use(morgan('dev'))
+
+app.use('/public', express.static(path.join(__dirname, 'public')))
+
+//rutas
+app.use(require('./viewEngine/routes'))
+app.use('/api', require('./routes/_api'))
+
+//Inicializando el servidor
+app.listen(app.get('port'), () => {
+    console.log(app.get('appName'))
+    console.log("Server corriendo en el puerto:", app.get('port'))
+
+})
+
