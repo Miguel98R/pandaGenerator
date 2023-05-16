@@ -1,0 +1,13 @@
+doctype html
+html(lang='es')
+    head
+        title QR Generator
+    body
+        h1 QR Generator
+        form(action='/generate' method='post' enctype='multipart/form-data')
+            input(type='file' name='file')
+            input(type='text' name='url')
+            button(type='submit') Generate QR Code
+        if image
+            img(src=`/images/${image}`)
+            a(href=`/images/${image}` download=`${image}`) Download QR Code

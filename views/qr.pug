@@ -1,0 +1,9 @@
+doctype html
+html(lang='es')
+
+    head
+        title QR Code Generated
+    body
+        h1 QR Code Generated
+        img(src=`/images/${image}`)
+        a(href=`/images/${image}` download=`${image}`) Download QR Code
